@@ -11,7 +11,7 @@ namespace TestApp.Model
     {
         public Person()
         {
-            this.Identities = new HashSet<Identifier>();
+            this.Identities = new List<Identifier>();
         }
         [Key]
         public Guid id { get; set; }

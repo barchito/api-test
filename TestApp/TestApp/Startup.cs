@@ -11,8 +11,11 @@ using Microsoft.Extensions.Options;
 using FluentValidation.AspNetCore;
 using TestApp.Model;
 using Microsoft.EntityFrameworkCore;
-using TestApp.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
+using TestApp.PeopleRepositories.Interface;
+using TestApp.PeopleRepositories.People;
+using TestApp.BAL.Interface;
+using TestApp.BAL;
 
 namespace TestApp
 {
@@ -37,10 +40,10 @@ namespace TestApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=TestAPIDB;Trusted_Connection=True;";
-            services.AddDbContext<TestAPIContext>(options => options.UseSqlServer(connection));
+                        
+            services.AddDbContext<TestAPIContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped(typeof(IDataAccess<Person, int>), typeof(DataAccessRepository));
+            services.AddScoped(typeof(IPeopleRepository), typeof(PeopleRepository));
             services.AddMvc().AddFluentValidation()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>())
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IdentifierValidator>());

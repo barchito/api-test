@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace TestApp.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Reset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Persons",
+                name: "People",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -19,41 +19,42 @@ namespace TestApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Persons", x => x.id);
+                    table.PrimaryKey("PK_People", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Identifier",
+                name: "Identifiers",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Personid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Personid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Identifier", x => x.id);
+                    table.PrimaryKey("PK_Identifiers", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Identifier_Persons_Personid",
+                        name: "FK_Identifiers_People_Personid",
                         column: x => x.Personid,
-                        principalTable: "Persons",
+                        principalTable: "People",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Identifier_Personid",
-                table: "Identifier",
+                name: "IX_Identifiers_Personid",
+                table: "Identifiers",
                 column: "Personid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Identifier");
+                name: "Identifiers");
 
             migrationBuilder.DropTable(
-                name: "Persons");
+                name: "People");
         }
     }
 }

@@ -11,18 +11,10 @@ namespace TestApp.Model
     public class Identifier
     {
         [Key]
-        public Guid id { get; set; }
-        [NotMapped]
-        public IdentificationType idenityType { get; set; }
+        public Guid id { get; set; }      
+        public int Type { get; set; }        
         public Guid Personid { get; set; }
         public string Value { get; set; }
-    }
-
-    public enum IdentificationType
-    {
-        email = 1,
-        accesscard = 2,
-        licenseplate = 3
     }
 
     public class IdentifierValidator : AbstractValidator<Identifier>
@@ -30,6 +22,7 @@ namespace TestApp.Model
         public IdentifierValidator()
         {
             RuleFor(x => x.id).NotNull();
+            RuleFor(x => x.Type).NotNull();
             RuleFor(x => x.Value).NotEmpty();            
         }
     }

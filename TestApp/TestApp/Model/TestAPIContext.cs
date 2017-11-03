@@ -11,17 +11,12 @@ namespace TestApp.Model
         public TestAPIContext(DbContextOptions options)
             : base(options)
         { }
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<Identifier> Identifier { get; set; }
+        public DbSet<Person> People { get; set; }
+        public DbSet<Identifier> Identifiers { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
     }
         
-    public class Response
-    {
-        public bool isSuccess { get; set; }
-        public Object data { get; set; }
-        public string message { get; set; }
-    }
+   
 }

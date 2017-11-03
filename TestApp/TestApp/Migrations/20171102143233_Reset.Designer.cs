@@ -11,8 +11,8 @@ using TestApp.Model;
 namespace TestApp.Migrations
 {
     [DbContext(typeof(TestAPIContext))]
-    [Migration("20171101045505_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20171102143233_Reset")]
+    partial class Reset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,9 @@ namespace TestApp.Migrations
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("Personid");
+                    b.Property<Guid>("Personid");
+
+                    b.Property<int>("Type");
 
                     b.Property<string>("Value");
 
@@ -34,7 +36,7 @@ namespace TestApp.Migrations
 
                     b.HasIndex("Personid");
 
-                    b.ToTable("Identifier");
+                    b.ToTable("Identifiers");
                 });
 
             modelBuilder.Entity("TestApp.Model.Person", b =>
@@ -50,14 +52,15 @@ namespace TestApp.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Persons");
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("TestApp.Model.Identifier", b =>
                 {
                     b.HasOne("TestApp.Model.Person")
                         .WithMany("Identities")
-                        .HasForeignKey("Personid");
+                        .HasForeignKey("Personid")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

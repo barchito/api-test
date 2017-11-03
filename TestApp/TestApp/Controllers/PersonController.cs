@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Model;
 using TestApp.BAL;
-using TestApp.Repositories;
+using TestApp.PeopleRepositories.Interface;
+using TestApp.BAL.Interface;
 
 namespace TestApp.Controllers
 {
@@ -14,52 +15,27 @@ namespace TestApp.Controllers
     [Route("api/Person")]
     public class PersonController : Controller
     {
-        private IDataAccess<Person, int> dataAccess;
-        public   PersonController(IDataAccess<Person, int> dataAccessObj)
+        private IPeopleRepository businessAccess;
+        public   PersonController(IPeopleRepository businessAccessObj)
         {
-            dataAccess = dataAccessObj;
+            businessAccess = businessAccessObj;
         }
        
-        // GET: api/Person
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+      
 
-        // GET: api/Person/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        
-        // POST: api/Person
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-        
-        // PUT: api/Person/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
+        /// <summary>
+        ///     This method return all people list
+        /// </summary>
+        /// <returns>People List</returns>
         [Route("GetPersonList")]
         [HttpGet]
-        public Response GetPersonList()
+        public async Task<Response> GetPersonList()
         {
             try
             {
                 List<Person> personList = new List<Person>();
-                personList = dataAccess.GetPersonList().ToList();
+                personList = await businessAccess.GetPersonList();
+                
                 return new Response { isSuccess = true, data = personList, message = " " };
             }
             catch (Exception ex)
@@ -68,14 +44,19 @@ namespace TestApp.Controllers
             }
 
         }
+
+        /// <summary>
+        ///     This method return people list according to first name or last name
+        /// </summary>
+        /// <returns>People List</returns>
         [Route("GetPersonListByFirstOrLastName")]
         [HttpGet]
-        public Response GetPersonListByFirstOrLastName(string FirstName = "", string LastName = "")
+        public async Task<Response> GetPersonListByFirstOrLastName(string FirstName = "", string LastName = "")
         {
             try
             {
                 List<Person> personList = new List<Person>();
-                personList = dataAccess.GetPersonListByFirstOrLastName(FirstName, LastName).ToList();
+                personList = await businessAccess.GetPersonListByFirstOrLastName(FirstName, LastName);
                 return new Response { isSuccess = true, data = personList, message = " " };
             }
             catch (Exception ex)
@@ -84,14 +65,19 @@ namespace TestApp.Controllers
             }
 
         }
+
+        /// <summary>
+        ///     This method return people list according to Identity
+        /// </summary>
+        /// <returns>People List</returns>
         [Route("GetPersonListBySpecificIdentity")]
         [HttpGet]
-        public Response GetPersonListBySpecificIdentity(string specification="")
+        public async Task<Response> GetPersonListBySpecificIdentity(int specification)
         {
             try
             {
                 List<Person> personList = new List<Person>();
-                personList = dataAccess.GetPersonListBySpecificIdentity(specification).ToList();
+                personList = await businessAccess.GetPersonListBySpecificIdentity(specification);
                 return new Response { isSuccess = true, data = personList, message = " " };
             }
             catch (Exception ex)
@@ -100,9 +86,14 @@ namespace TestApp.Controllers
             }
         }
 
+
+        /// <summary>
+        ///     This method create people with identifiers
+        /// </summary>
+        /// <returns></returns>
         [Route("CreatePersonWithIdetifiers")]
         [HttpPost]
-        public Response CreatePersonWithIdetifiers([FromBody]Person person)
+        public async Task<Response> CreatePersonWithIdetifiers([FromBody]Person person)
         {
             try
             {
@@ -111,7 +102,7 @@ namespace TestApp.Controllers
                     return new Response { isSuccess = false, data = null, message = "Invalid Request data." };
                 } else
                 {
-                    bool success = dataAccess.CreatePersonWithIdetifiers(person);
+                    bool success = await businessAccess.CreatePersonWithIdetifiers(person);
                     if (success)
                     {
                         return new Response { isSuccess = true, data = null, message = "User Created successfully" };
@@ -130,9 +121,14 @@ namespace TestApp.Controllers
                 return new Response { isSuccess = false, data = null, message = "Server Error" };
             }
         }
+
+        /// <summary>
+        ///     This method create people without identifiers
+        /// </summary>
+        /// <returns></returns>
         [Route("CreatePersonWithOutIdetifiers")]
         [HttpPost]
-        public Response CreatePersonWithOutIdetifiers([FromBody]Person person)
+        public async Task<Response> CreatePersonWithOutIdetifiers([FromBody]Person person)
         {
             try
             {
@@ -143,7 +139,7 @@ namespace TestApp.Controllers
                 }
                 else
                 {                    
-                    bool success = dataAccess.CreatePersonWithOutIdetifiers(person);
+                    bool success = await businessAccess.CreatePersonWithOutIdetifiers(person);
                     if (success)
                     {
                         return new Response { isSuccess = true, data = null, message = "User Created successfully" };
@@ -161,18 +157,23 @@ namespace TestApp.Controllers
                 return new Response { isSuccess = false, data = null, message = "Server Error" };
             }
         }
+
+        /// <summary>
+        ///     This method add identity to people 
+        /// </summary>
+        /// <returns></returns>
         [Route("AddIdentifierToPerson")]
-        [HttpGet]
-        public Response AddIdentifierToPerson(Guid id, int Value)
+        [HttpPost]
+        public async Task<Response> AddIdentifierToPerson(Guid personId, Identifier identityObj)
         {
             try
             {
-                if(Value>0 && Value < 4 && id!=null)
+                if(identityObj !=null  && personId != null)
                 {
-                    bool success = dataAccess.AddIdentifierToPerson(id, Value);
+                    bool success = await businessAccess.AddIdentifierToPerson(personId, identityObj);
                     if (success)
                     {
-                        return new Response { isSuccess = true, data = null, message = "User Updated successfully" };
+                        return new Response { isSuccess = true, data = null, message = "Identifier added successfully" };
                     }
                     else
                     {
@@ -192,16 +193,21 @@ namespace TestApp.Controllers
             }
         }
 
+
+        /// <summary>
+        ///     This method delete identity from people 
+        /// </summary>
+        /// <returns></returns>
         [Route("DeleteIdentifierToPerson")]
-        [HttpGet]
-        public Response DeleteIdentifierToPerson(Guid pid, Guid IdenId)
+        [HttpDelete]
+        public async Task<Response> DeleteIdentifierToPerson(Guid pid, Guid IdenId)
         {
             try
             {
                 if(pid!=null && IdenId != null)
                 {
-                    bool success = dataAccess.DeleteIdentifierToPerson(pid, IdenId);
-                    return new Response { isSuccess = true, data = null, message = "User Updated successfully" };
+                    bool success =await businessAccess.DeleteIdentifierToPerson(pid, IdenId);
+                    return new Response { isSuccess = true, data = null, message = "Identifier deleted successfully" };
                 }
                 else
                 {
@@ -215,9 +221,13 @@ namespace TestApp.Controllers
             }
         }
 
+        /// <summary>
+        ///     This method update person without identity
+        /// </summary>
+        /// <returns></returns>
         [Route("UpdatePersonWithoutIdentifier")]
         [HttpPost]
-        public Response UpdatePersonWithoutIdentifier([FromBody]Person person)
+        public async Task<Response> UpdatePersonWithoutIdentifier([FromBody]Person person)
         {
             try
             {
@@ -228,7 +238,7 @@ namespace TestApp.Controllers
                 }
                 else
                 {                   
-                    bool success = dataAccess.UpdatePersonWithoutIdentifier(person);
+                    bool success = await businessAccess.UpdatePersonWithoutIdentifier(person);
                     if (success)
                     {
                         return new Response { isSuccess = true, data = null, message = "User Updated successfully" };
@@ -248,15 +258,19 @@ namespace TestApp.Controllers
             }
         }
 
-        [Route("DeleteIdentifierToPerson")]
+        /// <summary>
+        ///     This method delete people virtually
+        /// </summary>
+        /// <returns></returns>
+        [Route("DeletePerson")]
         [HttpDelete]
-        public Response DeletePersonVirtually(Guid id)
+        public async Task<Response> DeletePerson(Guid id)
         {
             try
             {
                 if (id != null )
                 {
-                    bool success = dataAccess.DeletePersonVirtually(id);
+                    bool success = await businessAccess.DeletePersonVirtually(id);
                     return new Response { isSuccess = true, data = null, message = "User Deleted successfully" };
                 }
                 else

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestApp.BAL.Interface;
 using TestApp.Model;
-using TestApp.PeopleRepositories.Interface;
+using TestApp.DAL.Interface;
 
 namespace TestApp.BAL
 {

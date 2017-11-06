@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{1D9A4D35-6B22-47D6-BDF1-F8F96E214827}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUnitTest", "ApiUnitTest\ApiUnitTest.csproj", "{80E8FC61-1EA6-45CD-99E9-8F4CDE94830D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{1D9A4D35-6B22-47D6-BDF1-F8F96E214827}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D9A4D35-6B22-47D6-BDF1-F8F96E214827}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D9A4D35-6B22-47D6-BDF1-F8F96E214827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80E8FC61-1EA6-45CD-99E9-8F4CDE94830D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80E8FC61-1EA6-45CD-99E9-8F4CDE94830D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80E8FC61-1EA6-45CD-99E9-8F4CDE94830D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80E8FC61-1EA6-45CD-99E9-8F4CDE94830D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

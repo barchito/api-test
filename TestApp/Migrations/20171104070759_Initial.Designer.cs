@@ -11,8 +11,8 @@ using TestApp.Model;
 namespace TestApp.Migrations
 {
     [DbContext(typeof(TestAPIContext))]
-    [Migration("20171102143233_Reset")]
-    partial class Reset
+    [Migration("20171104070759_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

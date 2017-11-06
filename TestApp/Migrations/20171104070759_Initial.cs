@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TestApp.Migrations
 {
-    public partial class Reset : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

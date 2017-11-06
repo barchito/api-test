@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestApp.DAL.Interface;
 using TestApp.Model;
-using TestApp.PeopleRepositories.Interface;
 
-namespace TestApp.PeopleRepositories.People
+namespace TestApp.DAL.People
 {
     public class DataAccessRepository : IDataAccess<Person, int>
     {
@@ -63,17 +63,18 @@ namespace TestApp.PeopleRepositories.People
         {
             try
             {
-
-                var identities = await ctx.Identifiers.Distinct().Where(x => x.Type == specification).ToListAsync();
+                //test
+                var identities = await ctx.Identifiers.Distinct().Where(x => x.Type == specification).Select( x=> x.Personid.ToString()).ToListAsync();
                 List<Person> personList = new List<Person>();
                 if (identities != null)
                 {
-                    foreach (var identity in identities)
-                    {
-                        Person person = new Person();
-                        person = await ctx.People.Include(x => x.Identities).Where(x => x.id == identity.Personid).FirstOrDefaultAsync();
-                        personList.Add(person);
-                    }
+                    personList = ctx.People.Include(x => x.Identities).Where(x => identities.Contains(x.id.ToString())).ToList();// .Contains( .Where(x=> x.Identities.Where(i=> i.Type== specification).Contains()
+                    //foreach (var identity in identities)
+                    //{
+                    //    Person person = new Person();
+                    //    person = await ctx.People.Include(x => x.Identities).Where(x => x.id == identity.Personid).FirstOrDefaultAsync();
+                    //    personList.Add(person);
+                    //}
                 }
 
                 return personList;
@@ -95,9 +96,7 @@ namespace TestApp.PeopleRepositories.People
                 if (i > 0)
                     return true;
                 else
-                    return false;
-                //    int res = ctx.SaveChanges();
-                //    return res;
+                    return false;               
             }
             catch (Exception ex)
             {

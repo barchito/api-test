@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Model;
 using TestApp.BAL;
-using TestApp.PeopleRepositories.Interface;
+using TestApp.DAL.Interface;
 using TestApp.BAL.Interface;
 
 namespace TestApp.Controllers
@@ -34,8 +34,7 @@ namespace TestApp.Controllers
             try
             {
                 List<Person> personList = new List<Person>();
-                personList = await businessAccess.GetPersonList();
-                
+                personList = await businessAccess.GetPersonList();                
                 return new Response { isSuccess = true, data = personList, message = " " };
             }
             catch (Exception ex)
@@ -164,13 +163,13 @@ namespace TestApp.Controllers
         /// <returns></returns>
         [Route("AddIdentifierToPerson")]
         [HttpPost]
-        public async Task<Response> AddIdentifierToPerson(Guid personId, Identifier identityObj)
+        public async Task<Response> AddIdentifierToPerson([FromBody]Identifier identityObj)
         {
             try
             {
-                if(identityObj !=null  && personId != null)
+                if(identityObj !=null)
                 {
-                    bool success = await businessAccess.AddIdentifierToPerson(personId, identityObj);
+                    bool success = await businessAccess.AddIdentifierToPerson(identityObj.Personid, identityObj);
                     if (success)
                     {
                         return new Response { isSuccess = true, data = null, message = "Identifier added successfully" };

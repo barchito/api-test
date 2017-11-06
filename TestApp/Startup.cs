@@ -12,8 +12,8 @@ using FluentValidation.AspNetCore;
 using TestApp.Model;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Swagger;
-using TestApp.PeopleRepositories.Interface;
-using TestApp.PeopleRepositories.People;
+using TestApp.DAL.Interface;
+using TestApp.DAL.People;
 using TestApp.BAL.Interface;
 using TestApp.BAL;
 
@@ -25,6 +25,9 @@ namespace TestApp
         //{
         //    Configuration = configuration;
         //}
+
+
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -36,12 +39,26 @@ namespace TestApp
         }
 
         public IConfigurationRoot Configuration { get; }
-
+        private IHostingEnvironment Env { get; set; }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-                        
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+            //var config2 = Configuration.GetConnectionString("DefaultConnection");
+
+            //if (Env.IsEnvironment("Test"))
+            //{
+            //    services.AddDbContext<TestAPIContext>(options =>
+            //        options.UseInMemoryDatabase(databaseName: "StarWars"));
+            //}
+            //else
+            //{
+            //    services.AddDbContext<TestAPIContext>(options =>
+            //        options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            //}
+
             services.AddDbContext<TestAPIContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<TestAPIContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped(typeof(IDataAccess<Person, int>), typeof(DataAccessRepository));
             services.AddScoped(typeof(IPeopleRepository), typeof(PeopleRepository));
             services.AddMvc().AddFluentValidation()

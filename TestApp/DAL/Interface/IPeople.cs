@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestApp.Model;
 
-namespace TestApp.PeopleRepositories.Interface
+namespace TestApp.DAL.Interface
 {
    
     public interface IDataAccess<TEntity, U> where TEntity : class
